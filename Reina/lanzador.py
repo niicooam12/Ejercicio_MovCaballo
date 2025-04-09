@@ -30,6 +30,10 @@ class NReinasGUI:
             self.n = n
             self.size = 600 // n  # Tamaño de cada celda
             self.reinas = NReinas(n)
+            solucion = self.reinas.resolver()
+            if not solucion:
+                messagebox.showinfo("Sin solución", "No hay solución para el número de reinas ingresado.")
+                return
             self.tablero = self.reinas.obtener_tablero()
 
             # Crear el canvas para dibujar el tablero
@@ -62,12 +66,17 @@ class NReinasGUI:
         x2 = (col + 1) * self.size
         y2 = (fila + 1) * self.size
 
+        # Dibujar el círculo negro de fondo
+        self.canvas.create_oval(x1, y1, x2, y2, fill="black", outline="white")
+
+        # Dibujar la base de la corona (rectángulo)
         self.canvas.create_rectangle(
             x1 + self.size // 4, y2 - self.size // 4,
             x2 - self.size // 4, y2 - self.size // 6,
             fill="gold", outline="black"
         )
 
+        # Dibujar la parte superior de la corona (triángulo)
         self.canvas.create_polygon(
             x1 + self.size // 4, y2 - self.size // 4,
             x1 + self.size // 2, y1 + self.size // 4,
@@ -75,6 +84,7 @@ class NReinasGUI:
             fill="gold", outline="black"
         )
 
+        # Dibujar las joyas de la corona (pequeños círculos)
         self.canvas.create_oval(
             x1 + self.size // 3 - 5, y1 + self.size // 4 - 5,
             x1 + self.size // 3 + 5, y1 + self.size // 4 + 5,
@@ -90,6 +100,8 @@ class NReinasGUI:
             x2 - self.size // 3 + 5, y1 + self.size // 4 + 5,
             fill="green", outline="black"
         )
+
+        self.canvas.create_oval(x1, y1, x2, y2, fill="black", outline="white")
 
 if __name__ == "__main__":
     root = tk.Tk()
