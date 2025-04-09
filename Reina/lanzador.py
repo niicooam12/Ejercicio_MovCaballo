@@ -1,5 +1,5 @@
 import tkinter as tk
-from reina import NReinas
+from NReinas import NReinas
 
 class NReinasGUI:
     def __init__(self, n):
@@ -15,6 +15,7 @@ class NReinasGUI:
 
     def dibujar_tablero(self):
         """Dibuja el tablero y coloca las reinas."""
+        print("Tablero:", self.tablero)  # Depuración
         for i in range(self.n):
             for j in range(self.n):
                 color = "white" if (i + j) % 2 == 0 else "gray"
@@ -65,12 +66,7 @@ class NReinasGUI:
     def iniciar(self):
         self.root.mainloop()
 
-
 if __name__ == "__main__":
-    n = input("Introduce el número de reinas: ")
-    if n.isdigit() and int(n) > 0:
-        n = int(n)
-        gui = NReinasGUI(n)
-        gui.iniciar()
-    else:
-        print("Por favor, introduce un número válido mayor o igual a 1.")
+    n = int(input("Ingrese el tamaño del tablero: "))
+    app = NReinasGUI(n)
+    app.iniciar()
