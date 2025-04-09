@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
 from TorreHanoi import TorreHanoi
+import time
 
 class Lanzador:
     def __init__(self, master):
@@ -27,11 +28,13 @@ class Lanzador:
         try:
             num_discos = int(self.entry.get())
             if num_discos <= 0:
-                raise ValueError("El número de discos debe ser positivo.")
+                messagebox.showerror("Entrada inválida", "El número de discos debe ser positivo.")
+                return
             self.juego = TorreHanoi(num_discos)
             self.dibujar_torres()
-        except ValueError as e:
-            messagebox.showerror("Entrada inválida", str(e))
+            self.master.after(500, self.resolver_hanoi, num_discos, 0, 1, 2)  # Llama a la resolución automática
+        except ValueError:
+            messagebox.showerror("Entrada inválida", "Por favor, ingrese un número válido.")
 
     def dibujar_torres(self):
         for torre in self.torres:
@@ -44,6 +47,20 @@ class Lanzador:
                 y1 = 300 - (j + 1) * 20
                 y2 = 300 - j * 20
                 self.torres[i].create_rectangle(x1, y1, x2, y2, fill="blue")
+
+    def resolver_hanoi(self, n, origen, auxiliar, destino):
+        if n == 1:
+            self.juego.mover_disco(origen, destino)
+            self.dibujar_torres()
+            self.master.update()
+            time.sleep(0.5)  # Pausa para visualizar el movimiento
+        else:
+            self.resolver_hanoi(n - 1, origen, destino, auxiliar)
+            self.juego.mover_disco(origen, destino)
+            self.dibujar_torres()
+            self.master.update()
+            time.sleep(0.5)  # Pausa para visualizar el movimiento
+            self.resolver_hanoi(n - 1, auxiliar, origen, destino)
 
 if __name__ == "__main__":
     root = tk.Tk()
