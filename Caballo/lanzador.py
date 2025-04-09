@@ -1,5 +1,5 @@
 import random
-import random
+from models import Movimiento, Session
 
 class MovsCaballo:
     def __init__(self, tam_tablero=8):
