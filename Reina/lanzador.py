@@ -1,21 +1,49 @@
 import tkinter as tk
+from tkinter import messagebox
 from NReinas import NReinas
 
 class NReinasGUI:
-    def __init__(self, n):
-        self.n = n
-        self.size = 600 // n  # Tamaño de cada celda
-        self.root = tk.Tk()
-        self.root.title(f"{n} Reinas")
-        self.canvas = tk.Canvas(self.root, width=600, height=600)
-        self.canvas.pack()
-        self.reinas = NReinas(n)
-        self.tablero = self.reinas.obtener_tablero()
-        self.dibujar_tablero()
+    def __init__(self, master):
+        self.master = master
+        self.master.title("N Reinas")
+        
+        self.label = tk.Label(master, text="Ingrese el número de reinas:")
+        self.label.pack(pady=10)
+
+        self.entry = tk.Entry(master)
+        self.entry.pack(pady=10)
+
+        self.start_button = tk.Button(master, text="Iniciar", command=self.iniciar_juego)
+        self.start_button.pack(pady=10)
+
+        self.canvas = None  # Se inicializa más tarde cuando se crea el tablero
+
+    def iniciar_juego(self):
+        try:
+            n = self.entry.get()
+            if not n.isdigit() or int(n) <= 0:
+                messagebox.showerror("Entrada inválida", "El número de reinas debe ser un entero mayor a 0.")
+                return
+            n = int(n)
+            
+            # Crear el tablero y resolver el problema
+            self.n = n
+            self.size = 600 // n  # Tamaño de cada celda
+            self.reinas = NReinas(n)
+            self.tablero = self.reinas.obtener_tablero()
+
+            # Crear el canvas para dibujar el tablero
+            if self.canvas:
+                self.canvas.destroy()  # Elimina el canvas anterior si existe
+            self.canvas = tk.Canvas(self.master, width=600, height=600)
+            self.canvas.pack(pady=10)
+
+            self.dibujar_tablero()
+        except ValueError as e:
+            messagebox.showerror("Entrada inválida", str(e))
 
     def dibujar_tablero(self):
         """Dibuja el tablero y coloca las reinas."""
-        print("Tablero:", self.tablero)  # Depuración
         for i in range(self.n):
             for j in range(self.n):
                 color = "white" if (i + j) % 2 == 0 else "gray"
@@ -63,10 +91,7 @@ class NReinasGUI:
             fill="green", outline="black"
         )
 
-    def iniciar(self):
-        self.root.mainloop()
-
 if __name__ == "__main__":
-    n = int(input("Ingrese el tamaño del tablero: "))
-    app = NReinasGUI(n)
-    app.iniciar()
+    root = tk.Tk()
+    app = NReinasGUI(root)
+    root.mainloop()
